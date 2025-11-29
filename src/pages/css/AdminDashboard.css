@@ -1,0 +1,162 @@
+/* Inherits global layout from App.css */
+
+/* --- MAIN LAYOUT --- */
+.dashboard-layout {
+    display: flex;
+    height: 100vh;
+    background-color: #f3f4f6; /* Light gray background */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.sidebar {
+    width: 280px;
+    background: white;
+    border-right: 1px solid #e5e7eb;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.03);
+}
+
+.main-content {
+    flex: 1;
+    padding: 2.5rem;
+    overflow-y: auto;
+}
+
+.section-container h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.section-container p {
+    color: #6b7280;
+    margin-bottom: 2rem;
+}
+
+/* --- CARDS --- */
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 1px solid #e5e7eb;
+}
+
+.table-card {
+    padding: 0; /* Let the table fill the card */
+    overflow: hidden; /* For rounded corners on the table */
+}
+
+/* --- TABLE STYLES --- */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.admin-table th {
+    background-color: #f9fafb;
+    color: #374151;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.admin-table td {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+    color: #111827;
+    vertical-align: middle;
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f3f4f6; /* Subtle hover effect */
+}
+
+.user-name strong {
+    display: block;
+    font-size: 1rem;
+    color: #111827;
+}
+
+.user-email {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+/* --- ROLE BADGES --- */
+.role-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-admin { background-color: #fee2e2; color: #991b1b; }
+.badge-student { background-color: #dbeafe; color: #1e40af; }
+.badge-employer { background-color: #dcfce7; color: #166534; }
+.badge-po { background-color: #f3e8ff; color: #6b21a8; } /* Placement Officer */
+
+/* --- ACTION BUTTONS --- */
+.actions-cell {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1.1rem;
+}
+
+.icon-btn.edit {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+.icon-btn.edit:hover { background-color: #bae6fd; }
+
+.icon-btn.delete {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+.icon-btn.delete:hover { background-color: #fecaca; }
+
+/* ... (Keep other styles for Settings, Analytics, Security) ... */
+/* You can paste the rest of the CSS from the previous response here if you haven't already */
+.setting-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f3f4f6; padding: 15px 0; }
+.small-text { font-size: 0.85rem; color: #6b7280; margin: 0; }
+.switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; }
+.slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 3px; background-color: white; transition: .4s; }
+input:checked + .slider { background-color: #4f46e5; }
+input:checked + .slider:before { transform: translateX(24px); }
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+.btn-group { display: flex; gap: 10px; margin-top: 15px; }
+.security-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.log-terminal { background: #1f2937; color: #10b981; font-family: 'Courier New', monospace; }
+.logs-window { height: 150px; overflow-y: auto; padding: 10px; background: #111827; border-radius: 6px; }
+.log-line { border-bottom: 1px solid #374151; padding: 4px 0; font-size: 0.85rem; }
+.log-line span { color: #6b7280; margin-right: 10px; }

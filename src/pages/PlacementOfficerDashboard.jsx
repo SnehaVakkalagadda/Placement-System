@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './css/PlacementOfficerDashboard.css'; // We will create this CSS
+import './css/PlacementOfficerDashboard.css';
 
 function PlacementOfficerDashboard() {
   const [activeSection, setActiveSection] = useState('overview');
@@ -7,15 +7,29 @@ function PlacementOfficerDashboard() {
   const [students, setStudents] = useState([]);
   const [jobs, setJobs] = useState([]);
   const [report, setReport] = useState([]);
-  const [announcement, setAnnouncement] = useState("");
 
-  // FETCH DATA
+  // --- 1. DATA INTEGRATION (The Fetching Logic) ---
+  const fetchAllData = () => {
+    // Fetch Stats
+    fetch('http://localhost:5001/api/admin/stats')
+      .then(res => res.json()).then(setStats);
+
+    // Fetch Students (From Signup)
+    fetch('http://localhost:5001/api/admin/students')
+      .then(res => res.json()).then(setStudents);
+
+    // Fetch Jobs (From Employer Dashboard)
+    fetch('http://localhost:5001/api/admin/jobs')
+      .then(res => res.json()).then(setJobs);
+
+    // Fetch Applications (From Student Actions)
+    fetch('http://localhost:5001/api/admin/report')
+      .then(res => res.json()).then(setReport);
+  };
+
+  // Run on page load
   useEffect(() => {
-    // We reuse the admin API routes we created earlier as they serve the same purpose
-    fetch('http://localhost:5001/api/admin/stats').then(res => res.json()).then(setStats);
-    fetch('http://localhost:5001/api/admin/students').then(res => res.json()).then(setStudents);
-    fetch('http://localhost:5001/api/admin/jobs').then(res => res.json()).then(setJobs);
-    fetch('http://localhost:5001/api/admin/report').then(res => res.json()).then(setReport);
+    fetchAllData();
   }, []);
 
   // --- ACTIONS ---
@@ -27,18 +41,8 @@ function PlacementOfficerDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })
     });
-    alert(`Job ${newStatus} Successfully`);
-    fetch('http://localhost:5001/api/admin/jobs').then(res => res.json()).then(setJobs);
-  };
-
-  const verifyStudent = (id) => {
-    alert(`Student ${id} Verified (Mock Action)`);
-  };
-
-  const broadcastMsg = () => {
-    if(!announcement) return;
-    alert(`Announcement Sent: "${announcement}"`);
-    setAnnouncement("");
+    // Refresh Data immediately to show update
+    fetchAllData();
   };
 
   // --- RENDERERS ---
@@ -64,76 +68,43 @@ function PlacementOfficerDashboard() {
                 <h1>{stats.placedStudents || 0}</h1>
             </div>
         </div>
-        
         <div className="card">
-            <h4>Broadcast Communication</h4>
-            <p>Send an announcement to all registered students.</p>
-            <textarea 
-                placeholder="Type your message here..." 
-                rows="3"
-                value={announcement}
-                onChange={(e) => setAnnouncement(e.target.value)}
-                className="broadcast-input"
-            ></textarea>
-            <button className="primary-btn mt-2" onClick={broadcastMsg}>Send Announcement</button>
+            <h4 style={{marginBottom:'10px'}}>System Health</h4>
+            <p>Data is syncing in real-time from Student and Employer portals.</p>
+            <button className="primary-btn" onClick={fetchAllData}>Refresh Data</button>
         </div>
     </div>
-  );
-
-  const renderStudents = () => (
-      <div className="section-container">
-          <h3>Student Management</h3>
-          <div className="card table-card">
-            <table className="officer-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>CGPA</th>
-                        <th>Backlogs</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {students.map(std => (
-                        <tr key={std._id}>
-                            <td>{std.name}</td>
-                            <td>{std.email}</td>
-                            <td>{std.cgpa || "N/A"}</td>
-                            <td>{std.backlogs || 0}</td>
-                            <td>
-                                <button className="action-btn verify" onClick={() => verifyStudent(std._id)}>Verify</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-          </div>
-      </div>
   );
 
   const renderJobs = () => (
       <div className="section-container">
           <h3>Job Posting Oversight</h3>
+          <p>Monitor jobs posted by companies.</p>
           <div className="card table-card">
             <table className="officer-table">
                 <thead>
                     <tr>
                         <th>Company</th>
                         <th>Role</th>
+                        <th>Min CGPA</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th>Control</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {jobs.length === 0 && <tr><td colSpan="5">No jobs posted yet.</td></tr>}
                     {jobs.map(job => (
                         <tr key={job._id}>
-                            <td>{job.company}</td>
+                            <td><strong>{job.company}</strong></td>
                             <td>{job.title}</td>
+                            <td>{job.minCGPA}+</td>
                             <td><span className={`pill ${job.status.toLowerCase()}`}>{job.status}</span></td>
                             <td>
-                                {job.status !== 'Open' && <button className="action-btn approve" onClick={() => handleJobAction(job._id, 'approve')}>Approve</button>}
-                                {job.status === 'Open' && <button className="action-btn reject" onClick={() => handleJobAction(job._id, 'close')}>Close</button>}
+                                {job.status === 'Open' ? (
+                                    <button className="action-btn reject" onClick={() => handleJobAction(job._id, 'close')}>Close Job</button>
+                                ) : (
+                                    <button className="action-btn approve" onClick={() => handleJobAction(job._id, 'approve')}>Re-Open</button>
+                                )}
                             </td>
                         </tr>
                     ))}
@@ -147,24 +118,28 @@ function PlacementOfficerDashboard() {
       <div className="section-container">
           <div className="header-flex">
             <h3>Placement Tracker</h3>
-            <button className="secondary-btn" onClick={() => alert("Report Downloaded!")}>📥 Download Excel</button>
+            <p>Live view of student applications.</p>
           </div>
           <div className="card table-card">
             <table className="officer-table">
                 <thead>
                     <tr>
-                        <th>Student</th>
+                        <th>Student Name</th>
                         <th>Company</th>
-                        <th>Role</th>
+                        <th>Job Role</th>
                         <th>Current Status</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {report.length === 0 && <tr><td colSpan="4">No applications yet.</td></tr>}
                     {report.map(app => (
                         <tr key={app._id}>
-                            <td>{app.userId?.name || "Unknown"}</td>
-                            <td>{app.jobId?.company || "Unknown"}</td>
-                            <td>{app.jobId?.title}</td>
+                            <td>
+                                <strong>{app.userId?.name || "Unknown"}</strong><br/>
+                                <small style={{color:'#666'}}>{app.userId?.email}</small>
+                            </td>
+                            <td>{app.jobId?.company || "Deleted Job"}</td>
+                            <td>{app.jobId?.title || "Unknown Role"}</td>
                             <td><span className={`pill ${app.status.toLowerCase()}`}>{app.status}</span></td>
                         </tr>
                     ))}
@@ -184,15 +159,13 @@ function PlacementOfficerDashboard() {
             </div>
             <nav>
                 <button className={activeSection === 'overview' ? 'active' : ''} onClick={() => setActiveSection('overview')}>📊 Overview</button>
-                <button className={activeSection === 'students' ? 'active' : ''} onClick={() => setActiveSection('students')}>🎓 Students</button>
-                <button className={activeSection === 'jobs' ? 'active' : ''} onClick={() => setActiveSection('jobs')}>📢 Jobs</button>
+                <button className={activeSection === 'jobs' ? 'active' : ''} onClick={() => setActiveSection('jobs')}>📢 Job Oversight</button>
                 <button className={activeSection === 'tracking' ? 'active' : ''} onClick={() => setActiveSection('tracking')}>📈 Tracker</button>
             </nav>
         </div>
 
         <div className="main-content">
             {activeSection === 'overview' && renderOverview()}
-            {activeSection === 'students' && renderStudents()}
             {activeSection === 'jobs' && renderJobs()}
             {activeSection === 'tracking' && renderTracking()}
         </div>
