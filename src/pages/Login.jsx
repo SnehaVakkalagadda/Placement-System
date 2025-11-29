@@ -5,19 +5,35 @@ import './css/Login.css';
 function Login({ setUser }) {
   const [role, setRole] = useState('student');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState(''); // <--- New State
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Simple Login Logic (Since we don't have a database yet)
-    if(email) {
-        setUser({ name: 'User', role: role });
-        
-        if(role === 'student') navigate('/student');
-        else if(role === 'employer') navigate('/employer');
-        else if(role === 'admin') navigate('/admin');
-    } else {
-        alert("Please enter an email");
+    if(!email || !password) return alert("Please enter email and password");
+
+    try {
+      const response = await fetch('http://localhost:5001/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, role }), // Sending Password now
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setUser(data.user);
+        alert("Login Successful!");
+        if (data.user.role === 'student') navigate('/student');
+        else if (data.user.role === 'employer') navigate('/employer');
+        else if (data.user.role === 'admin') navigate('/admin');
+        else if (data.user.role === 'placement_officer') navigate('/placement-officer');
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Server connection failed");
     }
   };
 
@@ -45,12 +61,24 @@ function Login({ setUser }) {
               />
             </div>
 
+            {/* NEW PASSWORD FIELD */}
+            <div className="form-group">
+              <input 
+                type="password" 
+                placeholder="Enter your password" 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
             <div className="form-group">
               <label>Select Role:</label>
               <select value={role} onChange={(e) => setRole(e.target.value)}>
                 <option value="student">Student</option>
                 <option value="employer">Employer</option>
                 <option value="admin">Admin</option>
+                <option value="placement_officer">Placement Officer</option>
               </select>
             </div>
 

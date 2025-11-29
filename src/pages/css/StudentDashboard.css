@@ -1,40 +1,157 @@
-/* src/pages/StudentDashboard.css */
-.student-container {
-  max-width: 1200px;
-  margin: 0 auto;
+/* LAYOUT */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f3f4f6;
 }
 
-.student-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  padding-top: 1rem;
-}
-
-.student-job-card {
+/* SIDEBAR */
+.sidebar {
+  width: 250px;
   background: white;
-  padding: 2rem;
-  border-radius: 16px;
-  transition: all 0.3s ease;
-  border: 1px solid #f3f4f6;
-  position: relative;
-  overflow: hidden;
+  border-right: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
-.student-job-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-  border-color: var(--primary-color);
+.user-profile-summary {
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-.student-job-card h3 {
-  margin-top: 0;
-  color: var(--text-dark);
+.avatar {
+  width: 60px;
+  height: 60px;
+  background: #4f46e5;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin: 0 auto 10px;
 }
 
-.apply-btn {
+.sidebar nav button {
+  display: block;
   width: 100%;
-  padding: 10px;
-  margin-top: 15px;
-  background-color: var(--secondary-color);
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 12px;
+  margin-bottom: 5px;
+  color: #4b5563;
+  border-radius: 8px;
+  font-size: 1rem;
 }
+
+.sidebar nav button:hover, .sidebar nav button.active {
+  background: #e0e7ff;
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.notifications-box {
+  margin-top: auto;
+  background: #fffbeb;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.notif-item {
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+    font-size: 0.8rem;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.section-container h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #1f2937;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: 10px;
+}
+
+/* Profile Grid */
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.card input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.ai-score-box {
+    background: #f0fdf4;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #bbf7d0;
+    text-align: center;
+    margin-top: 10px;
+}
+.score { font-size: 2rem; font-weight: bold; color: #16a34a; }
+
+/* Job Cards */
+.job-card-advanced {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tag { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; }
+.tag.eligible { background: #dcfce7; color: #16a34a; }
+.tag.not-eligible { background: #fee2e2; color: #dc2626; }
+
+/* Tracking Progress Bar */
+.track-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+}
+
+.step-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.step {
+    background: #e5e7eb;
+    color: #6b7280;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+.step.active { background: #4f46e5; color: white; }
+.line { height: 2px; flex: 1; background: #e5e7eb; margin: 0 10px; }
+
+/* Resources */
+.resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.resource-card { background: white; padding: 1.5rem; border-radius: 12px; text-align: center; }
+
+/* Chat */
+.chat-interface { background: white; border-radius: 12px; height: 400px; display: flex; flex-direction: column; }
+.chat-box { flex: 1; padding: 20px; background: #f9fafb; }
+.msg { padding: 10px; border-radius: 8px; margin-bottom: 10px; max-width: 70%; }
+.msg.received { background: #e5e7eb; align-self: flex-start; }
+.msg.sent { background: #4f46e5; color: white; margin-left: auto; }
+.chat-input { display: flex; padding: 10px; border-top: 1px solid #ddd; }

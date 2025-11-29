@@ -2,10 +2,11 @@ import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Login from './pages/Login';
-import Signup from './pages/Signup';
+import Signup from './pages/SignUp';
 import StudentDashboard from './pages/StudentDashboard';
 import EmployerDashboard from './pages/EmployerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import PlacementOfficerDashboard from './pages/PlacementOfficerDashboard';
 import './App.css'; // You can keep the default Vite CSS or clear it
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
           <Route path="/signup" element={<Signup setUser={setUser} />} />
           <Route 
             path="/student" 
-            element={user?.role === 'student' ? <StudentDashboard /> : <Navigate to="/" />} 
+            element={user?.role === 'student' ? <StudentDashboard user={user} /> : <Navigate to="/" />} 
           />
           <Route 
             path="/employer" 
@@ -31,6 +32,10 @@ function App() {
           <Route 
             path="/admin" 
             element={user?.role === 'admin' ? <AdminDashboard /> : <Navigate to="/" />} 
+          />
+          <Route 
+            path="/placement-officer" 
+            element={user?.role === 'placement_officer' ? <PlacementOfficerDashboard /> : <Navigate to="/" />} 
           />
         </Routes>
       </div>
