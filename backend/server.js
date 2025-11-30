@@ -31,4 +31,7 @@ app.use('/api/admin', require('./routes/admin'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/superadmin', require('./routes/superAdmin')); // Make sure casing matches filename!
 const PORT = process.env.PORT || 5001;
+app.get('/', (req, res) => {
+  res.send("Backend is working!");
+});
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
