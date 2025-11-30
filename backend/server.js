@@ -7,10 +7,7 @@ const app = express();
 
 // --- CRITICAL SECTION: MIDDLEWARE ---
 // 1. Allow CORS first (This acts as the gatekeeper)
-app.use(cors({
-  origin: ["https://692ba324274f42b9d36ef947--symphonious-tapioca-8ed8dd.netlify.app/","https://symphonious-tapioca-8ed8dd.netlify.app", "http://localhost:5173"], // Allow all connections for now
-  credentials: true
-}));
+app.use(cors()); // No brackets, no options. Just allow everything.
 
 // 2. Allow JSON data to be understood
 app.use(express.json()); 
