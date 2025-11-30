@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const User = require('../models/User');
-
+console.log("✅ Auth Route File Loaded Successfully");
 // TEST ROUTE (To debug)
 // Go to https://your-url.onrender.com/api/auth/test to check this
 router.get('/test', (req, res) => {
