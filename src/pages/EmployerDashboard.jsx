@@ -78,9 +78,39 @@ function EmployerDashboard() {
     if(context === 'workflow' && workflowJobId) fetchShortlisted(workflowJobId);
   };
 
-  const handleSchedule = (e) => {
+  const handleSchedule = async (e) => {
       e.preventDefault();
-      alert(`Scheduled ${schedule.type} on ${schedule.date} at ${schedule.time}. Notification sent.`);
+      
+      // Validation: Must select a job first
+      if(!workflowJobId) {
+          alert("Please select a Job Role from the dropdown first.");
+          return;
+      }
+
+      // Find Job Title for the message
+      const jobTitle = jobs.find(j => j._id === workflowJobId)?.title || "Job";
+
+      try {
+          const response = await fetch('http://localhost:5001/api/notifications/schedule', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                  jobId: workflowJobId,
+                  jobTitle: jobTitle,
+                  ...schedule // contains date, time, type
+              })
+          });
+
+          const data = await response.json();
+          if(response.ok) {
+              alert(data.message); // "Invites sent to X candidates"
+          } else {
+              alert(data.message); // Error message
+          }
+      } catch (error) {
+          console.error(error);
+          alert("Failed to send invites.");
+      }
   };
 
   // --- UI SECTIONS ---
@@ -149,13 +179,15 @@ function EmployerDashboard() {
         </div>
     );
 
+    // 1. DEFINE the variable FIRST
     const filteredApplicants = applicants.filter(app => {
-        // FIX: Treat missing CGPA as 0 so they show up
-        // Removed the CGPA filter logic entirely as requested
         const meetsStatus = filterStatus === 'All' ? true : app.status === filterStatus;
         return meetsStatus;
     });
 
+    // 2. LOG it SECOND (Now it exists, so it won't crash)
+    console.log("ALL APPLICANTS FROM DB:", applicants);
+    console.log("FILTERED LIST:", filteredApplicants);
     return (
         <div className="section-container">
             <div className="section-header flex-row">
@@ -240,8 +272,22 @@ function EmployerDashboard() {
             <h3>Recruitment Workflow</h3>
             <p>Manage rounds and finalize selections.</p>
           </div>
+
+          {/* 1. GLOBAL JOB SELECTOR (Moves to top) */}
+          <div className="card" style={{padding: '1.5rem', marginBottom: '20px', borderLeft: '4px solid #0ea5e9'}}>
+              <label style={{fontWeight: 'bold', display: 'block', marginBottom: '10px'}}>Select Recruitment Drive:</label>
+              <select 
+                  className="job-selector" 
+                  value={workflowJobId} 
+                  onChange={(e) => fetchShortlisted(e.target.value)}
+              >
+                  <option value="">-- Select Job Role --</option>
+                  {jobs.map(j => <option key={j._id} value={j._id}>{j.title}</option>)}
+              </select>
+          </div>
           
           <div className="workflow-grid">
+            {/* LEFT: SCHEDULE */}
             <div className="card">
                 <h4 className="card-title">Schedule Interview / Test</h4>
                 <form onSubmit={handleSchedule}>
@@ -261,25 +307,17 @@ function EmployerDashboard() {
                         <label>Time</label>
                         <input type="time" onChange={e => setSchedule({...schedule, time: e.target.value})} required/>
                     </div>
-                    <button className="primary-btn full-width">Send Invites</button>
+                    <button className="primary-btn full-width">Send Invites to Shortlisted</button>
                 </form>
             </div>
 
+            {/* RIGHT: FINAL SELECTION */}
             <div className="card final-selection-card">
-                <h4 className="card-title">Final Selection</h4>
-                <p style={{marginBottom: '15px'}}>Select a Job Role to see Shortlisted candidates.</p>
+                <h4 className="card-title">Shortlisted Candidates</h4>
                 
-                <select 
-                    className="job-selector" 
-                    value={workflowJobId} 
-                    onChange={(e) => fetchShortlisted(e.target.value)}
-                >
-                    <option value="">-- Select Job Role --</option>
-                    {jobs.map(j => <option key={j._id} value={j._id}>{j.title}</option>)}
-                </select>
-
                 <div className="shortlist-container">
-                    {workflowJobId && shortlisted.length === 0 && <p className="no-data-small">No shortlisted candidates found.</p>}
+                    {!workflowJobId && <p className="no-data-small">Select a job above to view candidates.</p>}
+                    {workflowJobId && shortlisted.length === 0 && <p className="no-data-small">No shortlisted candidates yet.</p>}
                     
                     {shortlisted.map(app => (
                         <div key={app._id} className="shortlist-item">
@@ -300,7 +338,6 @@ function EmployerDashboard() {
           </div>
       </div>
   );
-
   return (
     <div className="dashboard-layout">
         <div className="sidebar">

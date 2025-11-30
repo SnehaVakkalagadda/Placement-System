@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import './css/StudentDashboard.css';
 
+
+
 function StudentDashboard({ user }) {
   const [activeSection, setActiveSection] = useState('profile'); // Default view
   const [jobs, setJobs] = useState([]);
@@ -21,6 +23,15 @@ function StudentDashboard({ user }) {
     { id: 2, text: "Your Resume Score is ready!", type: "info" }
   ]);
 
+  // 1. Fetch Notifications
+  useEffect(() => {
+    if(user?._id) {
+        fetch(`http://localhost:5001/api/notifications/${user._id}`)
+            .then(res => res.json())
+            .then(data => setNotifications(data))
+            .catch(err => console.error(err));
+    }
+  }, [user]);
   // 1. Fetch Data on Load
   useEffect(() => {
     // Fetch Jobs
@@ -254,6 +265,17 @@ function StudentDashboard({ user }) {
   return (
     <div className="dashboard-layout">
         {/* SIDEBAR */}
+        <div className="notifications-box">
+                <h5>🔔 Notifications</h5>
+                {notifications.length === 0 && <p style={{fontSize:'0.8rem', color:'#666'}}>No new alerts.</p>}
+                {notifications.map(n => (
+                    <div key={n._id} className="notif-item">
+                        {n.message}
+                        <br/>
+                        <small style={{color:'#999', fontSize:'0.7rem'}}>{new Date(n.createdAt).toLocaleDateString()}</small>
+                    </div>
+                ))}
+            </div>
         <div className="sidebar">
             <div className="user-profile-summary">
                 <div className="avatar">{user?.name?.charAt(0)}</div>
