@@ -23,11 +23,12 @@ mongoose.connect(process.env.MONGO_URI || dbUrl)
   .catch(err => console.error('❌ Connection Error:', err));
 
 // Routes
+// Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/applications', require('./routes/applications'));
 app.use('/api/admin', require('./routes/admin'));
-app.use('/api/superadmin', require('./routes/superAdmin'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/superadmin', require('./routes/superAdmin')); // Make sure casing matches filename!
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
