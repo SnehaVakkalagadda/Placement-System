@@ -26,7 +26,7 @@ function StudentDashboard({ user }) {
   // 1. Fetch Notifications
   useEffect(() => {
     if(user?._id) {
-        fetch(`http://localhost:5001/api/notifications/${user._id}`)
+        fetch(`https://placement-system-0pah.onrender.com/api/notifications/${user._id}`)
             .then(res => res.json())
             .then(data => setNotifications(data))
             .catch(err => console.error(err));
@@ -35,14 +35,14 @@ function StudentDashboard({ user }) {
   // 1. Fetch Data on Load
   useEffect(() => {
     // Fetch Jobs
-    fetch('http://localhost:5001/api/jobs')
+    fetch('https://placement-system-0pah.onrender.com/api/jobs')
       .then(res => res.json())
       .then(data => setJobs(data))
       .catch(err => console.error(err));
 
     // Fetch My Applications
     if(user?._id) {
-      fetch(`http://localhost:5001/api/applications/user/${user._id}`)
+      fetch(`https://placement-system-0pah.onrender.com/api/applications/user/${user._id}`)
         .then(res => res.json())
         .then(data => setMyApplications(data))
         .catch(err => console.error(err));
@@ -55,7 +55,7 @@ function StudentDashboard({ user }) {
     if (!user?._id) return alert("User not found");
 
     try {
-      const response = await fetch(`http://localhost:5001/api/auth/update/${user._id}`, {
+      const response = await fetch(`https://placement-system-0pah.onrender.com/api/auth/update/${user._id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -87,7 +87,7 @@ function StudentDashboard({ user }) {
   };
 
   const handleApply = async (jobId) => {
-    const res = await fetch('http://localhost:5001/api/applications/apply', {
+    const res = await fetch('https://placement-system-0pah.onrender.com/api/applications/apply', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: user._id, jobId })

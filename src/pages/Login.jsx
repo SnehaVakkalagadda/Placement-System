@@ -13,7 +13,7 @@ function Login({ setUser }) {
     if(!email || !password) return alert("Please enter email and password");
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch('https://placement-system-0pah.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, role }), // Sending Password now

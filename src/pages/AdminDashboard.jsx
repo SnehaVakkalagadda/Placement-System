@@ -20,15 +20,15 @@ function AdminDashboard() {
   }, []);
 
   const fetchData = () => {
-    fetch('http://localhost:5001/api/superadmin/users').then(res => res.json()).then(setUsers);
-    fetch('http://localhost:5001/api/superadmin/analytics').then(res => res.json()).then(setAnalytics);
+    fetch('https://placement-system-0pah.onrender.com/api/superadmin/users').then(res => res.json()).then(setUsers);
+    fetch('https://placement-system-0pah.onrender.com/api/superadmin/analytics').then(res => res.json()).then(setAnalytics);
   };
 
   // --- ACTIONS ---
 
   const handleDeleteUser = async (id) => {
     if(!window.confirm("Are you sure? This deletes all their data.")) return;
-    await fetch(`http://localhost:5001/api/superadmin/users/${id}`, { method: 'DELETE' });
+    await fetch(`https://placement-system-0pah.onrender.com/api/superadmin/users/${id}`, { method: 'DELETE' });
     fetchData(); // Refresh list
   };
 

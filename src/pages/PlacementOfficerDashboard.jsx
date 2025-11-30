@@ -11,19 +11,19 @@ function PlacementOfficerDashboard() {
   // --- 1. DATA INTEGRATION (The Fetching Logic) ---
   const fetchAllData = () => {
     // Fetch Stats
-    fetch('http://localhost:5001/api/admin/stats')
+    fetch('https://placement-system-0pah.onrender.com/api/admin/stats')
       .then(res => res.json()).then(setStats);
 
     // Fetch Students (From Signup)
-    fetch('http://localhost:5001/api/admin/students')
+    fetch('https://placement-system-0pah.onrender.com/api/admin/students')
       .then(res => res.json()).then(setStudents);
 
     // Fetch Jobs (From Employer Dashboard)
-    fetch('http://localhost:5001/api/admin/jobs')
+    fetch('https://placement-system-0pah.onrender.com/api/admin/jobs')
       .then(res => res.json()).then(setJobs);
 
     // Fetch Applications (From Student Actions)
-    fetch('http://localhost:5001/api/admin/report')
+    fetch('https://placement-system-0pah.onrender.com/api/admin/report')
       .then(res => res.json()).then(setReport);
   };
 
@@ -36,7 +36,7 @@ function PlacementOfficerDashboard() {
 
   const handleJobAction = async (jobId, action) => {
     const newStatus = action === 'approve' ? 'Open' : 'Closed';
-    await fetch(`http://localhost:5001/api/jobs/${jobId}`, {
+    await fetch(`https://placement-system-0pah.onrender.com/api/jobs/${jobId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus })

@@ -18,7 +18,7 @@ function EmployerDashboard() {
 
   // 1. Fetch Jobs
   const fetchJobs = () => {
-    fetch('http://localhost:5001/api/jobs')
+    fetch('https://placement-system-0pah.onrender.com/api/jobs')
       .then(res => res.json())
       .then(data => setJobs(data))
       .catch(err => console.error(err));
@@ -28,7 +28,7 @@ function EmployerDashboard() {
 
   // 2. Fetch Applicants
   const fetchApplicants = async (jobId) => {
-    const res = await fetch(`http://localhost:5001/api/applications/job/${jobId}`);
+    const res = await fetch(`https://placement-system-0pah.onrender.com/api/applications/job/${jobId}`);
     const data = await res.json();
     setApplicants(data);
   };
@@ -37,7 +37,7 @@ function EmployerDashboard() {
   const fetchShortlisted = async (jobId) => {
     setWorkflowJobId(jobId);
     if(!jobId) { setShortlisted([]); return; }
-    const res = await fetch(`http://localhost:5001/api/applications/job/${jobId}`);
+    const res = await fetch(`https://placement-system-0pah.onrender.com/api/applications/job/${jobId}`);
     const data = await res.json();
     const shortList = data.filter(app => app.status === 'Shortlisted');
     setShortlisted(shortList);
@@ -47,7 +47,7 @@ function EmployerDashboard() {
 
   const handlePostJob = async (e) => {
     e.preventDefault();
-    await fetch('http://localhost:5001/api/jobs', {
+    await fetch('https://placement-system-0pah.onrender.com/api/jobs', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(jobForm)
@@ -59,7 +59,7 @@ function EmployerDashboard() {
 
   const toggleJobStatus = async (job) => {
     const newStatus = job.status === 'Open' ? 'Closed' : 'Open';
-    await fetch(`http://localhost:5001/api/jobs/${job._id}`, {
+    await fetch(`https://placement-system-0pah.onrender.com/api/jobs/${job._id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: newStatus })
@@ -68,7 +68,7 @@ function EmployerDashboard() {
   };
 
   const handleStatusUpdate = async (appId, status, context = 'applicants') => {
-    await fetch(`http://localhost:5001/api/applications/status/${appId}`, {
+    await fetch(`https://placement-system-0pah.onrender.com/api/applications/status/${appId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status })
@@ -91,7 +91,7 @@ function EmployerDashboard() {
       const jobTitle = jobs.find(j => j._id === workflowJobId)?.title || "Job";
 
       try {
-          const response = await fetch('http://localhost:5001/api/notifications/schedule', {
+          const response = await fetch('https://placement-system-0pah.onrender.com/api/notifications/schedule', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
