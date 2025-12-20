@@ -9,7 +9,7 @@ function Signup({ setUser }) {
     name: '',
     email: '',
     phone: '',
-    password: '',
+    password: formData.password.trim(),
     confirmPassword: '',
     role: 'student'
   });

@@ -16,7 +16,12 @@ function Login({ setUser }) {
       const response = await fetch('https://placement-system-0pah.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, role }), // Sending Password now
+        body: JSON.stringify({
+                  email: email.trim(),
+                  password: password.trim(),
+                  role
+        })
+
       });
 
       const data = await response.json();
