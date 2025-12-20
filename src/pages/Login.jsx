@@ -22,8 +22,11 @@ function Login({ setUser }) {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.setItem("user", JSON.stringify(data.user));
         setUser(data.user);
         alert("Login Successful!");
+        
+        setUser(data.user);
         if (data.user.role === 'student') navigate('/student');
         else if (data.user.role === 'employer') navigate('/employer');
         else if (data.user.role === 'admin') navigate('/admin');
