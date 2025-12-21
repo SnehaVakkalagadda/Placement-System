@@ -26,6 +26,9 @@ router.post('/login', async (req, res) => {
     try { 
         const { email, password, role } = req.body; 
         const user = await User.findOne({ email }); 
+        console.log("DB password:", user?.password);
+        console.log("Input password:", password);
+        console.log("Are they equal?", user?.password === password);
         if (!user) return res.status(404).json({ message: "User not found" });
         if (user.role !== role) return res.status(400).json({ message: "Role mismatch" }); 
         if (user.password !== password) return res.status(400).json({ message: "Invalid Password" }); 
